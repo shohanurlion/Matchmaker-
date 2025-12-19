@@ -14,25 +14,25 @@ datasource db {
 }
 
 model User {
-  id                 String     @id @default(uuid())
-  email              String     @unique
-  password           String
-  role               UserRole
-  needPasswordChange Boolean    @default(true)
-  status             UserStatus @default(ACTIVE)
-  createdAt          DateTime   @default(now())
+   id                 String     @id @default(uuid())
+   email              String     @unique
+   password           String
+   role               UserRole @default(USER)
+   status             UserStatus @default(ACTIVE)
+   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   admin              Admin?
-
+  Matchmaker         Matchmaker?
+  normalUser        Normaluser?
   @@map("users")
 }
-
 model Admin {
   id            String   @id @default(uuid())
   name          String
   email         String   @unique
   profilePhoto  String?
   contactNumber String
+  address       String?
   isDeleted     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -42,15 +42,81 @@ model Admin {
   @@map("admins")
 }
 
+model Matchmaker {
+  id                 String     @id @default(uuid())
+  name               String
+  email              String     @unique
+  age                String
+  gender             Gender
+  maritalStatus      MaritalStatus
+  profilePhoto       String?
+  registrationNumber  String
+  experience          Int      @default(0)
+  phoneNumber        String?
+  address            String?
+  isDeleted          Boolean  @default(false)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  user User @relation(fields: [email], references: [email])
+  posts  Matchmakerpost[]
+  @@map("matchmaker")
+}
+
+model Matchmakerpost {
+  id            String   @id @default(uuid())
+  name               String
+  email              String     @unique
+  age                String
+  gender             Gender
+  maritalStatus      MaritalStatus
+  Photo              String?
+  phoneNumber        String?
+  address            String?
+  description        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  matchmaker    Matchmaker @relation(fields: [matchmakerId], references: [id])
+  matchmakerId  String
+  @@map("matchmakerpost")
+}
+
+model Normaluser {
+  id        String   @id @default(uuid())
+  name               String
+  email              String     @unique
+  age                String
+  gender             Gender
+  maritalStatus      MaritalStatus
+  description        String?
+  profilePhoto       String?
+  phoneNumber        String?
+  address            String?
+  isDeleted          Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [email], references: [email])
+  @@map("normaluser")
+}
+
+
 enum UserRole {
-  SUPER_ADMIN
+  MATCHMAKER
   ADMIN
-  DOCTOR
-  PATIENT
+  USER
 }
 
 enum UserStatus {
   ACTIVE
   BLOCKED
-  DELETED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum MaritalStatus {
+  DEVORCED
+  MARRIED
+  UNMARRIED
 }
