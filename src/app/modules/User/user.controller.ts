@@ -52,6 +52,14 @@ const createMatchmakerpost = async (req: Request, res: Response) => {
         data: result
     })   
 }
+const updateMatchmakerpost = async (req: Request, res: Response) => {
+    const result = await userService.updateMatchmakerpost(req);
+    res.status(200).json({
+        success: true,
+        message: "Matchmaker Post update successfuly!",
+        data: result
+    })   
+}
 const getallMatchmakerposts = async (req: Request, res: Response) => {
     const result = await userService.getallMatchmakerposts(req);
     res.status(200).json({
@@ -96,5 +104,6 @@ export const userController = {
     deleteMatchmaker,
     deleteMatchmakerpost,
     getMyprofile,
-    changeprofilestatus
+    changeprofilestatus,
+    updateMatchmakerpost
 }

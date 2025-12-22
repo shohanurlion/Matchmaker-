@@ -93,6 +93,24 @@ const createMatchmakerpost = async (req: any) => {
   });
   return result;
 }
+const updateMatchmakerpost = async (req: any) => {
+  const id = req.params.id;
+  const matchmakerpost = await prisma.matchmakerpost.findUnique({
+    where: {
+      id: id
+    }
+  });
+  if(!matchmakerpost){
+    throw new Error('Matchmaker Post not found');
+  }
+  const result = await prisma.matchmakerpost.update({
+    where: {
+      id: id
+    },
+    data: req.body
+  });
+  return result;
+}
 const getallMatchmakerposts = async (req:any) => {
   const userEmail = req.user.email;
   console.log(userEmail);
@@ -183,5 +201,6 @@ export const userService = {
   deleteMatchmaker,
   deleteMatchmakerpost,
   getMyprofile,
-  changeprofilestatus
+  changeprofilestatus,
+  updateMatchmakerpost
 };

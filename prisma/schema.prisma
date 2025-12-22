@@ -61,6 +61,17 @@ model Matchmaker {
   posts  Matchmakerpost[]
   @@map("matchmaker")
 }
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  photo      String?
+  createdAt DateTime @default(now())
+  updatedAt          DateTime   @updatedAt
+  posts     Matchmakerpost[]
+
+  @@map("category")
+}
+
 
 model Matchmakerpost {
   id            String   @id @default(uuid())
@@ -77,6 +88,8 @@ model Matchmakerpost {
   updatedAt     DateTime @updatedAt
   matchmaker    Matchmaker @relation(fields: [matchmakerId], references: [id])
   matchmakerId  String
+  categoryId     String?
+  category       Category?   @relation(fields: [categoryId], references: [id])
   @@map("matchmakerpost")
 }
 
